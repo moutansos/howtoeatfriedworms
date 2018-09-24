@@ -54,6 +54,11 @@ public class Main {
             "        writer.write(input);\n" +
             "        writer.close();\n" +
             "    }\n" +
+            "    private static void compileAndRun() throws IOException, InterruptedException{\n" +
+            "        Runtime run = Runtime.getRuntime();\n" +
+            "        run.exec(%2$cjavac Main.java%2$c).waitFor();\n" +
+            "        run.exec(%2$cjava Main%2$c);\n" +
+            "    }\n" +
             "}\n";
 
     private static final char tab = 9;
@@ -95,5 +100,11 @@ public class Main {
         BufferedWriter writer = new BufferedWriter(new FileWriter(dir.getAbsolutePath() + File.separator + "Main.java"));
         writer.write(input);
         writer.close();
+    }
+    
+    private static void compileAndRun() throws IOException, InterruptedException{
+        Runtime run = Runtime.getRuntime();
+        run.exec("javac Main.java").waitFor();
+        run.exec("java Main");
     }
 }
