@@ -5,13 +5,15 @@ import java.io.IOException;
 
 public class Main {
     private static final int iteration = 0;
+    private static final String iterationPath = "Iteration-" + iteration;
     private static final String program = "import java.io.BufferedWriter;\n" +
             "import java.io.File;\n" +
             "import java.io.FileWriter;\n" +
             "import java.io.IOException;\n" +
             "\n" +
             "public class Main {\n" +
-            "    private static final int iteration = 0;\n" +
+            "    private static final int iteration = %3$d;\n" +
+            "    private static final String iterationPath = %2$cIteration-%2$c + iteration;\n" +
             "    private static final String program = %1$s;\n" +
             "\n" +
             "    private static final char tab = 9;\n" +
@@ -20,9 +22,11 @@ public class Main {
             "    private static final char backSlash = 92;\n" +
             "\n" +
             "    public static void main(String[] args) {\n" +
+            "        if(iteration == 10)\n"+
+            "            return;\n" +
             "        try {\n" +
-            "            writeStringToFile(String.format(program, escapeProgramToStringFormat(program), quote));\n" +
-            "        } catch (IOException ex) {\n" +
+            "            writeStringToFile(String.format(program, escapeProgramToStringFormat(program), quote, iteration + 1));\n" +
+            "        } catch (Exception ex) {\n" +
             "            System.out.println(ex.getMessage());\n" +
             "        }\n" +
             "    }\n" +
@@ -56,8 +60,8 @@ public class Main {
             "    }\n" +
             "    private static void compileAndRun() throws IOException, InterruptedException{\n" +
             "        Runtime run = Runtime.getRuntime();\n" +
-            "        run.exec(%2$cjavac Main.java%2$c).waitFor();\n" +
-            "        run.exec(%2$cjava Main%2$c);\n" +
+            "        run.exec(%2$ccmd /c cd %2$c + iterationPath +%2$c && javac Main.java%2$c).waitFor();\n" +
+            "        run.exec(%2$ccmd /c cd %2$c + iterationPath +%2$c && java Main%2$c);\n" +
             "    }\n" +
             "}\n";
 
@@ -67,9 +71,13 @@ public class Main {
     private static final char backSlash = 92;
 
     public static void main(String[] args) {
+        if(iteration == 10)
+            return;
+
         try {
-            writeStringToFile(String.format(program, escapeProgramToStringFormat(program), quote));
-        } catch (IOException ex) {
+            writeStringToFile(String.format(program, escapeProgramToStringFormat(program), quote, iteration + 1));
+            compileAndRun();
+        } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
     }
@@ -104,7 +112,9 @@ public class Main {
     
     private static void compileAndRun() throws IOException, InterruptedException{
         Runtime run = Runtime.getRuntime();
-        run.exec("javac Main.java").waitFor();
-        run.exec("java Main");
+        String test = "cmd /c \"cd " + iterationPath + " && javac Main.java\"";
+        System.out.println(test);
+        run.exec(test).waitFor();
+        run.exec("cmd /c cd " + iterationPath +" && java Main");
     }
 }
