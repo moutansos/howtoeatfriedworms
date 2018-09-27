@@ -22,10 +22,12 @@ public class Main {
             "    private static final char backSlash = 92;\n" +
             "\n" +
             "    public static void main(String[] args) {\n" +
-            "        if(iteration == 10)\n"+
+            "        if(iteration == 10)\n" +
             "            return;\n" +
+            "\n" +
             "        try {\n" +
             "            writeStringToFile(String.format(program, escapeProgramToStringFormat(program), quote, iteration + 1));\n" +
+            "            compileAndRun();\n" +
             "        } catch (Exception ex) {\n" +
             "            System.out.println(ex.getMessage());\n" +
             "        }\n" +
@@ -37,7 +39,7 @@ public class Main {
             "        for(String line : lines) {\n" +
             "            String newLineStr = %2$c%2$c;\n" +
             "\n" +
-            "            if(output != %2$c%2$c)\n" +
+            "            if(!output.equals(%2$c%2$c))\n" +
             "                newLineStr += %2$c%2$c + tab + tab + tab;\n" +
             "\n" +
             "            newLineStr += %2$c%2$c + quote + line + backSlash + %2$cn%2$c + quote + %2$c +%2$c + newLine;\n" +
@@ -58,10 +60,11 @@ public class Main {
             "        writer.write(input);\n" +
             "        writer.close();\n" +
             "    }\n" +
+            "    \n" +
             "    private static void compileAndRun() throws IOException, InterruptedException{\n" +
             "        Runtime run = Runtime.getRuntime();\n" +
-            "        run.exec(%2$ccmd /c cd %2$c + iterationPath +%2$c && javac Main.java%2$c).waitFor();\n" +
-            "        run.exec(%2$ccmd /c cd %2$c + iterationPath +%2$c && java Main%2$c);\n" +
+            "        run.exec(%2$ccmd /c cd %2$c + iterationPath + %2$c && javac Main.java%2$c).waitFor();\n" +
+            "        run.exec(%2$ccmd /c cd %2$c + iterationPath +%2$c && java Main%2$c).waitFor();\n" +
             "    }\n" +
             "}\n";
 
@@ -88,7 +91,7 @@ public class Main {
         for(String line : lines) {
             String newLineStr = "";
 
-            if(output != "")
+            if(!output.equals(""))
                 newLineStr += "" + tab + tab + tab;
 
             newLineStr += "" + quote + line + backSlash + "n" + quote + " +" + newLine;
@@ -112,9 +115,7 @@ public class Main {
     
     private static void compileAndRun() throws IOException, InterruptedException{
         Runtime run = Runtime.getRuntime();
-        String test = "cmd /c \"cd " + iterationPath + " && javac Main.java\"";
-        System.out.println(test);
-        run.exec(test).waitFor();
-        run.exec("cmd /c cd " + iterationPath +" && java Main");
+        run.exec("cmd /c cd " + iterationPath + " && javac Main.java").waitFor();
+        run.exec("cmd /c cd " + iterationPath +" && java Main").waitFor();
     }
 }
