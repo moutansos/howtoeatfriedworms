@@ -16,7 +16,7 @@ void foo(const char* input)
     //What? No extra arguments supplied to printf?
     //It's a cheap trick to view the stack 8-)
     //We'll see this trick again when we look at format strings.
-    printf("My stack looks like:\n%p\n%p\n%p\n%p\n%p\n% p\n\n");
+    printf("My stack looks like:\n%p\n%p\n%p\n%p\n%p\n%p\n%p\n%p\n%p\n%p\n%p\n%p\n%p\n%p\n%p\n%p\n%p\n%p\n%p\n%p\n%p\n%p\n%p\n%p\n\n");
 
     //Pass the user input straight to secure code public enemy #1.
     strcpy(buf, input);
