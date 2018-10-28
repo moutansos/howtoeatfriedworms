@@ -11,7 +11,7 @@
 
 void foo(const char* input)
 {
-    char buf[10];
+    char buf[37];
 
     //What? No extra arguments supplied to printf?
     //It's a cheap trick to view the stack 8-)
