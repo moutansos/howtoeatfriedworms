@@ -9,7 +9,7 @@
             "name": "Debug (Launch)-App<DefendYourCodeJava>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
-            "console": "internalConsole",
+            "console": "integratedTerminal",
             "stopOnEntry": false,
             "mainClass": "cscd437.assignment6.App",
             "args": "",
