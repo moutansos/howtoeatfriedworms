@@ -7,8 +7,8 @@
 #include "main.h"
 
 static const char FIRST_NAME_PROMPT[] = "Please input your first name \n(Valid characters are upper and lower case letters and hyphens. Limited to 1 to 50 characters, more will be truncated):";
-// static const char LAST_NAME_PROMPT[] = "Please input your last name \n(Valid characters are upper and lower case letters and hyphens. Limited to 1 to 50 characters): \n";
-// static const char VAL1_PROMPT[] = "Please input the first number. It must be from –2147483647 to 2147483647\n";
+static const char LAST_NAME_PROMPT[] = "Please input your last name \n(Valid characters are upper and lower case letters and hyphens. Limited to 1 to 50 characters): \n";
+static const char VAL1_PROMPT[] = "Please input the first number. It must be from –2147483647 to 2147483647\n";
 // static const char VAL2_PROMPT[] = "Please input the second number. It must be from –2147483647 to 2147483647\n";
 // static const char READ_FILE_PROMPT[] = "Please input the name of an existing .txt file in the current directory.\n";
 // static const char WRITE_FILE_PROMPT[] = "Please input a name of a non-existing .txt file to write to in the current directory.\n";
@@ -23,11 +23,28 @@ static const char NAME_REGEX[] = "^[A-Za-z]{1,50}";
 // static const bool WRITE_FILE_MUST_EXIST = false;
 
 int main() {
-    char firstName[52];
+    char firstName[51];
     promptForValidText(firstName, sizeof(firstName)/sizeof(char), FIRST_NAME_PROMPT, NAME_REGEX);
 
+    char lastName[51];
+    promptForValidText(lastName, sizeof(lastName)/sizeof(char), LAST_NAME_PROMPT, NAME_REGEX);
+
+    int val1 = promptForValidInteger(VAL1_PROMPT);
+    printf("Test: %d", val1);
 
     return 0;
+}
+
+//https://stackoverflow.com/questions/5087062/how-to-get-int-from-stdio-in-c
+int promptForValidInteger(const char promptText[]) {
+    int inputIsValid = false;
+    int inputValue;
+
+    do {
+
+    } while(!inputIsValid);
+
+    return inputValue;
 }
 
 char* promptForValidText(char buff[], int bufferSize, const char promptText[], const char regexString[]) {
