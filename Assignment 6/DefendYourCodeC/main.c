@@ -16,12 +16,12 @@ static const char VAL1_PROMPT[] = "Please input the first number. It must be fro
 // static const char VAL2_PROMPT[] = "Please input the second number. It must be from –2147483647 to 2147483647\n";
 static const char READ_FILE_PROMPT[] = "Please input the name of an existing .txt file in the current directory.\n";
 static const char WRITE_FILE_PROMPT[] = "Please input a name of a non-existing .txt file to write to in the current directory.\n";
-// static const char FIRST_PASSWORD_PROMPT[] = "Please input a password of the following format. It may contain, 1-255 characters, A-Z upper or lower case, 0-9, and special characters(-_+=!@#$%%^&*()): \n";
-// static const char SECOND_PASSWORD_PROMPT[] = "Please input the password again: \n";
+static const char FIRST_PASSWORD_PROMPT[] = "Please input a password of the following format. It may contain, 1-255 characters, A-Z upper or lower case, 0-9, and special characters(-_+=!@#$%%^&*()): \n";
+static const char SECOND_PASSWORD_PROMPT[] = "Please input the password again: \n";
 
 static const char NAME_REGEX[] = "^[A-Za-z]{1,50}";
 static const char FILE_REGEX[] = "^[\\w\\- ]+\\.[Tt][Xx][Tt]$";
-// static const char PASS_REGEX[] = "^[\\w\\d\\-_\\+=!@#$%%^&\\*\\(\\)]{1,255}$";
+static const char PASS_REGEX[] = "^[\\w\\d\\-_\\+=!@#$%%^&\\*\\(\\)]{1,255}$";
 static const char INTEGER_REGEX[] = "^\\d+";
 
 static const bool READ_FILE_MUST_EXIST = true;
@@ -42,7 +42,13 @@ int main() {
     
     char writeFileName[51];
     promptForValidFileName(writeFileName, sizeof(writeFileName)/sizeof(char), WRITE_FILE_PROMPT, FILE_REGEX, WRITE_FILE_MUST_EXIST);
+    
+    char firstEnteredPassword[256];
+    promptForValidText(firstEnteredPassword, sizeof(firstEnteredPassword)/sizeof(firstEnteredPassword[0]) - 1, FIRST_PASSWORD_PROMPT, PASS_REGEX);
 
+     char secondEnteredPassword[256];
+    promptForValidText(firstEnteredPassword, sizeof(secondEnteredPassword)/sizeof(secondEnteredPassword[0]) - 1, SECOND_PASSWORD_PROMPT, PASS_REGEX);
+    
     return 0;
 }
 
