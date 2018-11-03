@@ -94,7 +94,7 @@ void storePassword(char * firstPassword){
     fprintf(fileToWrite, "%d + %d = %d\n", val1, val2, addVals);
     fprintf(fileToWrite, "%d * %d = %d\n", val1, vall2, multVals);
     
-    while(getLine(&line, &lineLen, fileToRead) != -1){
+    while(fscanf(fileToRead, %s, line) == 0){
         fprintf(fileToWrite, "%s\n", line);
     }
     fclose(fileToWrite);
