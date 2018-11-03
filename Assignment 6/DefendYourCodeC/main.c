@@ -13,7 +13,7 @@
 static const char FIRST_NAME_PROMPT[] = "Please input your first name \n(Valid characters are upper and lower case letters and hyphens. Limited to 1 to 50 characters, more will be truncated):";
 static const char LAST_NAME_PROMPT[] = "Please input your last name \n(Valid characters are upper and lower case letters and hyphens. Limited to 1 to 50 characters): \n";
 static const char VAL1_PROMPT[] = "Please input the first number. It must be from –2147483647 to 2147483647\n";
-// static const char VAL2_PROMPT[] = "Please input the second number. It must be from –2147483647 to 2147483647\n";
+static const char VAL2_PROMPT[] = "Please input the second number. It must be from –2147483647 to 2147483647\n";
 static const char READ_FILE_PROMPT[] = "Please input the name of an existing .txt file in the current directory.\n";
 static const char WRITE_FILE_PROMPT[] = "Please input a name of a non-existing .txt file to write to in the current directory.\n";
 static const char FIRST_PASSWORD_PROMPT[] = "Please input a password of the following format. It may contain, 1-255 characters, A-Z upper or lower case, 0-9, and special characters(-_+=!@#$%%^&*()): \n";
@@ -29,29 +29,73 @@ static const bool WRITE_FILE_MUST_EXIST = false;
 
 int main() {
     char firstName[51];
-    promptForValidText(firstName, sizeof(firstName)/sizeof(firstName[0]) - 1, FIRST_NAME_PROMPT, NAME_REGEX);
+    char * firstName = promptForValidText(firstName, sizeof(firstName)/sizeof(firstName[0]) - 1, FIRST_NAME_PROMPT, NAME_REGEX);
 
     char lastName[51];
-    promptForValidText(lastName, sizeof(lastName)/sizeof(lastName[0]) - 1, LAST_NAME_PROMPT, NAME_REGEX);
+    char * lastName = promptForValidText(lastName, sizeof(lastName)/sizeof(lastName[0]) - 1, LAST_NAME_PROMPT, NAME_REGEX);
 
     int val1 = promptForValidInteger(VAL1_PROMPT);
-    printf("Test: %d", val1);
+    int val2 = promptForValidInteger(VAL2_PROMPT);
 
     char readFileName[51];
-    promptForValidFileName(readFileName, sizeof(readFileName)/sizeof(char), READ_FILE_PROMPT, FILE_REGEX, READ_FILE_MUST_EXIST);
+    char * readFile = promptForValidFileName(readFileName, sizeof(readFileName)/sizeof(readFileName[0]) - 1, READ_FILE_PROMPT, FILE_REGEX, READ_FILE_MUST_EXIST);
     
     char writeFileName[51];
-    promptForValidFileName(writeFileName, sizeof(writeFileName)/sizeof(char), WRITE_FILE_PROMPT, FILE_REGEX, WRITE_FILE_MUST_EXIST);
+    char * writeFile = promptForValidFileName(writeFileName, sizeof(writeFileName)/sizeof(writeFileName[0]) - 1, WRITE_FILE_PROMPT, FILE_REGEX, WRITE_FILE_MUST_EXIST);
     
     char firstEnteredPassword[256];
-    promptForValidText(firstEnteredPassword, sizeof(firstEnteredPassword)/sizeof(firstEnteredPassword[0]) - 1, FIRST_PASSWORD_PROMPT, PASS_REGEX);
+    char * firstPassword = promptForValidText(firstEnteredPassword, sizeof(firstEnteredPassword)/sizeof(firstEnteredPassword[0]) - 1, FIRST_PASSWORD_PROMPT, PASS_REGEX);
 
-     char secondEnteredPassword[256];
-    promptForValidText(firstEnteredPassword, sizeof(secondEnteredPassword)/sizeof(secondEnteredPassword[0]) - 1, SECOND_PASSWORD_PROMPT, PASS_REGEX);
+    char secondEnteredPassword[256];
+    char * secondPassword = promptForValidText(firstEnteredPassword, sizeof(secondEnteredPassword)/sizeof(secondEnteredPassword[0]) - 1, SECOND_PASSWORD_PROMPT, PASS_REGEX);
+    
+    comparePasswords(secondPassword);
+    
+    outputInfoToFile(firstName, lastName, val1, val2);
     
     return 0;
 }
 
+void storePassword(char * firstPassword){
+    FILE * storeInFile = fopen("password_storage.txt", "w");
+    fprintf(storeInFile, "%s", firstPassword);
+    fclose(storeInFile);
+}
+void comparePasswords(char * secondPassword){
+
+    FILE * takeFromStorage = fopen("password_storage.txt", "r");
+    char * passwordOne = NULL;
+    size_t passLen = 256;
+    getLine(&passWordOne, &passLen, takeFromStorage);
+    if(strcmp(secondPassWord, passwordOne) != 0){
+        printf("Passwords do not match.\n");
+    }
+    else{
+        printf("Passwords match.\n");
+    }
+    fclose(takeFromStorage);
+}
+            
+void outputInfoToFile(char * firstName, char * lastName, int val1, int val2){
+    FILE * fileToWrite = fopen(writeFileName,"w");
+    FILE * fileToRead = fopen(readFileName, "r");
+    char * line = NULL;
+    size_t lineLen = 0;
+    
+    long addVals = val1 + val2;
+    long multVals = val1 * val2;
+    
+    fprintf(fileToWrite, "%s %s\n, firstName, lastName);
+    fprintf(fileToWrite, "%d + %d = %d\n", val1, val2, addVals);
+    fprintf(fileToWrite, "%d * %d = %d\n", val1, vall2, multVals);
+    
+    while(getLine(&line, &lineLen, fileToRead) != -1){
+        fprintf(fileToWrite, "%s\n", line);
+    }
+    fclose(fileToWrite);
+    fclose(fileToRead);  
+}
+            
 long promptForValidInteger(const char promptText[]) {
     int inputIsValid = false;
     long inputValue;
