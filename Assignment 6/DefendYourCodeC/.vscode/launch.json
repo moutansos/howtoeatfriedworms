@@ -1,0 +1,38 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "~/CommonData/Drive/Class Files/Secure Coding - CSCD 437/howtoeatfriedworms/Assignment 6/DefendYourCodeC/dyc",
+            "args": ["-fThreading"],
+            "stopAtEntry": false,
+            "cwd": "~/CommonData/Drive/Class Files/Secure Coding - CSCD 437/howtoeatfriedworms/Assignment 6/DefendYourCodeC",
+            "environment": [],
+            "externalConsole": true,
+            "windows": {
+                "MIMode": "gdb",
+                "setupCommands": [
+                    {
+                        "description": "Enable pretty-printing for gdb",
+                        "text": "-enable-pretty-printing",
+                        "ignoreFailures": true
+                    }
+                ]
+            },
+            "pipeTransport": {
+                "pipeCwd": "",
+                "pipeProgram": "C:\\Users\\mouta\\AppData\\Local\\Microsoft\\WindowsApps\\ubuntu.exe",
+                "pipeArgs": ["-c"],
+                "debuggerPath": "/usr/bin/gdb"
+            },
+            "sourceFileMap": {
+                "/mnt/e": "e:\\"
+            },
+        }
+    ]
+}
