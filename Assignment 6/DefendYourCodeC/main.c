@@ -71,7 +71,7 @@ void storePassword(char * firstPassword){
     FILE * takeFromStorage = fopen("password_storage.txt", "r");
     char * passwordOne = NULL;
     size_t passLen = 256;
-    getLine(&passWordOne, &passLen, takeFromStorage);
+    fscanf(takeFromStorage, %s, passwordOne);
     if(strcmp(secondPassWord, passwordOne) != 0){
         printf("Passwords do not match.\n");
     }
