@@ -62,44 +62,46 @@ int main() {
 
 void storePassword(char * firstPassword){
     FILE * storeInFile = fopen("password_storage.txt", "w");
-    fprintf(storeInFile, "%s", firstPassword);
+    long hashedPW = hash(firstPassword);
+    fprintf(storeInFile, "%ld", hashedPW);
     fclose(storeInFile);
 }
 
-/* void comparePasswords(char * secondPassword){
+void comparePasswords(char * secondPassword){
 
     FILE * takeFromStorage = fopen("password_storage.txt", "r");
-    char * passwordOne = NULL;
-    size_t passLen = 256;
-    fscanf(takeFromStorage, %s, passwordOne);
-    if(strcmp(secondPassWord, passwordOne) != 0){
+    long hashedFPW = 0;
+    long hashedSPW = hash(secondPassword);
+
+    fscanf(takeFromStorage, "%ld", &hashedFPW);
+    if(hashedFPW != hashedSPW){
         printf("Passwords do not match.\n");
     }
     else{
         printf("Passwords match.\n");
     }
     fclose(takeFromStorage);
-} */
+}
             
-/* void outputInfoToFile(char * firstName, char * lastName, int val1, int val2){
+void outputInfoToFile(char * firstName, char * lastName, int val1, int val2, char * readFileName, char * writeFileName){
     FILE * fileToWrite = fopen(writeFileName,"w");
     FILE * fileToRead = fopen(readFileName, "r");
     char * line = NULL;
-    size_t lineLen = 0;
+    //size_t lineLen = 0;
     
     long addVals = val1 + val2;
     long multVals = val1 * val2;
     
     fprintf(fileToWrite, "%s %s\n", firstName, lastName);
-    fprintf(fileToWrite, "%d + %d = %d\n", val1, val2, addVals);
-    fprintf(fileToWrite, "%d * %d = %d\n", val1, vall2, multVals);
+    fprintf(fileToWrite, "%d + %d = %ld\n", val1, val2, addVals);
+    fprintf(fileToWrite, "%d * %d = %ld\n", val1, val2, multVals);
     
-    while(fscanf(fileToRead, %s, line) == 0){
+    while(fscanf(fileToRead, "%s", line) == 0){
         fprintf(fileToWrite, "%s\n", line);
     }
     fclose(fileToWrite);
     fclose(fileToRead);  
-} */
+}
             
 long promptForValidInteger(const char promptText[]) {
     int inputIsValid = false;
@@ -186,3 +188,26 @@ void clearBuffer(char *input)
     else
     *i = '\0';
 }
+
+//http://www.cse.yorku.ca/~oz/hash.html
+long hash(char * password)
+{
+    long hash = 5381;
+    int c;
+
+    while((c = *password++)){
+        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+    }
+
+    return hash;
+}
+
+
+
+
+
+
+
+
+
+
