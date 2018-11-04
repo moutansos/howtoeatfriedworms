@@ -70,7 +70,7 @@ void storePassword(char * firstPassword){
 void comparePasswords(char * secondPassword){
 
     FILE * takeFromStorage = fopen("password_storage.txt", "r");
-    long hashedFPW = 0;
+    long hashedFPW;
     long hashedSPW = hash(secondPassword);
 
     fscanf(takeFromStorage, "%ld", &hashedFPW);
