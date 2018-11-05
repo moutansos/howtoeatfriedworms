@@ -2,6 +2,9 @@
 #define PCRE2_CODE_UNIT_WIDTH 8
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <limits.h>
 #include <stdbool.h>
 #include <pcre2.h>
 #include "main.h"
@@ -18,16 +21,17 @@ static const char VAL1_PROMPT[] = "Please input the first number. It must be fro
 static const char NAME_REGEX[] = "^[A-Za-z]{1,50}";
 // static const char FILE_REGEX[] = "^[\\w\\- ]+\\.[Tt][Xx][Tt]$";
 // static const char PASS_REGEX[] = "^[\\w\\d\\-_\\+=!@#$%%^&\\*\\(\\)]{1,255}$";
+static const char INTEGER_REGEX[] = "^\\d+";
 
 // static const bool READ_FILE_MUST_EXIST = true;
 // static const bool WRITE_FILE_MUST_EXIST = false;
 
 int main() {
     char firstName[51];
-    promptForValidText(firstName, sizeof(firstName)/sizeof(char), FIRST_NAME_PROMPT, NAME_REGEX);
+    promptForValidText(firstName, sizeof(firstName)/sizeof(firstName[0]) - 1, FIRST_NAME_PROMPT, NAME_REGEX);
 
     char lastName[51];
-    promptForValidText(lastName, sizeof(lastName)/sizeof(char), LAST_NAME_PROMPT, NAME_REGEX);
+    promptForValidText(lastName, sizeof(lastName)/sizeof(lastName[0]) - 1, LAST_NAME_PROMPT, NAME_REGEX);
 
     int val1 = promptForValidInteger(VAL1_PROMPT);
     printf("Test: %d", val1);
@@ -35,19 +39,20 @@ int main() {
     return 0;
 }
 
-//https://stackoverflow.com/questions/5087062/how-to-get-int-from-stdio-in-c
 int promptForValidInteger(const char promptText[]) {
     int inputIsValid = false;
     int inputValue;
 
     do {
+        char inuptBuffer[20];
+        promptForValidText(inuptBuffer, sizeof(inuptBuffer) / sizeof(inuptBuffer[0]) - 1, promptText, INTEGER_REGEX);
 
     } while(!inputIsValid);
 
     return inputValue;
 }
 
-char* promptForValidText(char buff[], int bufferSize, const char promptText[], const char regexString[]) {
+char* promptForValidText(char buff[], const int bufferSize, const char promptText[], const char regexString[]) {
     bool isValidInput = false;
     PCRE2_SPTR regexPattern = (PCRE2_SPTR)regexString;
     int errorNumber;
@@ -80,7 +85,7 @@ char* promptForValidText(char buff[], int bufferSize, const char promptText[], c
         }
         pcre2_match_data_free(matchData);
         pcre2_code_free(result);
-    } while(!isValidInput);
+    } while(!isValidInput) ;
 
     return buff;
 }
