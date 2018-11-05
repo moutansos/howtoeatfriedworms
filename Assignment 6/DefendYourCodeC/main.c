@@ -53,9 +53,9 @@ int main() {
     char secondEnteredPassword[256];
     promptForValidText(firstEnteredPassword, sizeof(secondEnteredPassword)/sizeof(secondEnteredPassword[0]) - 1, SECOND_PASSWORD_PROMPT, PASS_REGEX);
     
-    //comparePasswords(secondEnteredPassword);
+    comparePasswords(secondEnteredPassword);
     
-    //outputInfoToFile(firstName, lastName, val1, val2);
+    outputInfoToFile(firstName, lastName, val1, val2, readFileName, writeFileName);
     
     return 0;
 }
@@ -86,8 +86,6 @@ void comparePasswords(char * secondPassword){
 void outputInfoToFile(char * firstName, char * lastName, int val1, int val2, char * readFileName, char * writeFileName){
     FILE * fileToWrite = fopen(writeFileName,"w");
     FILE * fileToRead = fopen(readFileName, "r");
-    char * line = NULL;
-    //size_t lineLen = 0;
     
     long addVals = val1 + val2;
     long multVals = val1 * val2;
@@ -96,8 +94,9 @@ void outputInfoToFile(char * firstName, char * lastName, int val1, int val2, cha
     fprintf(fileToWrite, "%d + %d = %ld\n", val1, val2, addVals);
     fprintf(fileToWrite, "%d * %d = %ld\n", val1, val2, multVals);
     
-    while(fscanf(fileToRead, "%s", line) == 0){
-        fprintf(fileToWrite, "%s\n", line);
+    char c;
+    while((c = getc(fileToRead)) != EOF) {
+        fprintf(fileToWrite, "%c", c);
     }
     fclose(fileToWrite);
     fclose(fileToRead);  

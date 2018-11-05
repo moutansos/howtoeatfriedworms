@@ -1,0 +1,6 @@
+Tom
+Capaul
+12345678
+12345678
+input.txt
+output.txt
