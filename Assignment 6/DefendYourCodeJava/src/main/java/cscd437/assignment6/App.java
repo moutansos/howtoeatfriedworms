@@ -190,3 +190,27 @@ public class App
         return salt;
       }
 }
+
+private void outputInfoToFile(String firstname, String lastname, BigInteger val1, BigInteger val2, String readFileName, String writeFileName){
+    File writeFile = new File(writeFileName);
+    File readFile = new File(readFileName);
+    
+    PrintWriter writer = new PrintWriter(writeFile);
+    BufferedReader reader = new BufferedReader(new FileReader(readFile));
+    String line;
+    
+    BigInt addVals = val1 + val2;
+    BigInt multVals = val1 * val2;
+    
+    writer.println(firstname + " " + lastname);
+    writer.println(val1 + " + " + val2 + " = " + addVals);
+    writer.println(val1 + " * " + val2 + " = " + multVals);
+    
+    while((line = reader.readLine()) != null){
+        writer.println(line);
+    }
+    
+    writeFile.close();
+    readFile.close();  
+    
+}
