@@ -1,7 +1,7 @@
 
 #define PCRE2_CODE_UNIT_WIDTH 8
 
-//Contributors: Travis Currier,
+//Contributors: Travis Currier
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -15,7 +15,7 @@
 #include <openssl/crypto.h>
 #include <openssl/bio.h>
 #include <openssl/buffer.h>
-#include <sys/random.h>
+#include <linux/random.h>
 
 #include "main.h"
 
@@ -94,29 +94,34 @@ void storePassword(char * firstPassword) {
 }
 
 void comparePasswords(char * secondPassword) {
+    bool equal = false;
 
-    FILE * takeFromStorage = fopen("password_storage.txt", "r");
+    while(equal == false){
+	    FILE * takeFromStorage = fopen("password_storage.txt", "r");
 
-    char passwordSalt[51];
-    fscanf(takeFromStorage, "%50[^\n]\n", passwordSalt);
-    passwordSalt[50] = '\0';
-    
-    uint32_t outputBytes = 32;
-    char hexResult[2*outputBytes+1];
-    memset(hexResult, 0, sizeof(hexResult));
-    uint8_t binResult[outputBytes];
-    memset(hexResult, 0, sizeof(binResult));
-    PBKDF2_HMAC_SHA_512(secondPassword, strlen(secondPassword), (unsigned char*)passwordSalt, 50, 500, outputBytes, hexResult, binResult);
+	    char passwordSalt[51];
+	    fscanf(takeFromStorage, "%50[^\n]\n", passwordSalt);
+	    passwordSalt[50] = '\0';
+	    
+	    uint32_t outputBytes = 32;
+	    char hexResult[2*outputBytes+1];
+	    memset(hexResult, 0, sizeof(hexResult));
+	    uint8_t binResult[outputBytes];
+	    memset(hexResult, 0, sizeof(binResult));
+	    PBKDF2_HMAC_SHA_512(secondPassword, strlen(secondPassword), (unsigned 	char*)passwordSalt, 50, 500, outputBytes, hexResult, binResult);
 
-    char passwordFromFile[2*outputBytes+1];
-    fscanf(takeFromStorage, "%64[^\n]\n", passwordFromFile);
+	    char passwordFromFile[2*outputBytes+1];
+	    fscanf(takeFromStorage, "%64[^\n]\n", passwordFromFile);
 
-    if(strcmp(hexResult, passwordFromFile) == 0) {
-        printf("The passwords match!\n");
-    } else {
-        printf("The passwords do not match!\n");
+	    if(strcmp(hexResult, passwordFromFile) != 0) {
+		promptForValidText(secondPassword, sizeof(secondPassword)/sizeof(secondPassword[0]) - 1, SECOND_PASSWORD_PROMPT, PASS_REGEX);
+
+	    }
+	    else{
+	    	printf("The passwords match!\n");
+	    	equal = true;
+	    }
     }
-
     fclose(takeFromStorage);
 }
             
