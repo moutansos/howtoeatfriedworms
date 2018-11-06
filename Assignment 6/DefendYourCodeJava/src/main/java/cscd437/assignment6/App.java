@@ -1,11 +1,24 @@
 package cscd437.assignment6;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.NotActiveException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
 import java.util.InputMismatchException;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.regex.Pattern;
+
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 
 /**
  * Hello world!
@@ -26,6 +39,10 @@ public class App
     private static final String NAME_REGEX = "^[A-Za-z]{1,50}$";
     private static final String FILE_REGEX = "^[\\w\\- ]+\\.[Tt][Xx][Tt]$";
     private static final String PASS_REGEX = "^[\\w\\d\\-_\\+=!@#$%^&\\*\\(\\)]{1,255}$";
+
+    private static final String PASS_STORAGE_FILE = "pass_storage.dat";
+    private static final int PASS_ITERATIONS = 12;
+    private static final int PASS_KEY_LENGTH = 256;
     
     private static final boolean READ_FILE_MUST_EXIST = true;
     private static final boolean WRITE_FILE_MUST_EXIST = false;
@@ -43,16 +60,64 @@ public class App
         String fileToReadFromName = promptForValidFileName(kb, READ_FILE_PROMPT, FILE_REGEX, READ_FILE_MUST_EXIST);
         String fileToWriteTo = promptForValidFileName(kb, WRITE_FILE_PROMPT, FILE_REGEX, WRITE_FILE_MUST_EXIST);
 
-
+        try {
+            String firstPassword = promptForValidText(kb, FIRST_PASSWORD_PROMPT, PASS_REGEX);
+            storePassword(firstPassword);
+            String secondPassword = promptForValidText(kb, SECOND_PASSWORD_PROMPT, PASS_REGEX);
+            if(storedPasswordMatches(secondPassword)) {
+                System.out.println("The password matches");
+            } else {
+                System.out.println("The password does not match!");
+            }
+        } catch(IOException ex) {
+            System.out.println("Error with password storage.");
+        }
+        
     }
 
-    private static void passwordInputValidation(final Scanner kb) {
-        String password = promptForValidText(kb, FIRST_PASSWORD_PROMPT, PASS_REGEX);
+    private static void storePassword(String password) throws IOException {
+        byte[] salt = getSalt();
+        byte[] hashedPassword = hashPassword(password.toCharArray(), salt, PASS_ITERATIONS, PASS_KEY_LENGTH);
+        
+        boolean append = false;
+        BufferedWriter writer = new BufferedWriter(new FileWriter(PASS_STORAGE_FILE, append));
 
+        writer.append(new String(salt)); //TODO: Base64 encode
+        writer.append('\n');
+        writer.append(new String(hashedPassword)); //TODO: Base64 encode
+
+        writer.close();
     }
 
-    private static byte[] hashPassword(final char[] password) {
-        throw new RuntimeException();
+    private static boolean storedPasswordMatches(String password) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(PASS_STORAGE_FILE));
+        Scanner file = new Scanner(reader);
+        String saltText = file.nextLine();
+        String hashText = file.nextLine();
+        reader.close();
+
+        byte[] saltFromFile = saltText.getBytes(); //TODO: Base64 decode
+        byte[] hashFromFile = hashText.getBytes(); //TODO: Base64 decode
+
+        byte[] hashedPassword = hashPassword(password.toCharArray(), saltFromFile, PASS_ITERATIONS, PASS_KEY_LENGTH);
+
+        return Arrays.equals(hashFromFile, hashedPassword);
+    }
+
+    //https://www.owasp.org/index.php/Hashing_Java
+    private static byte[] hashPassword(final char[] password, final byte[] salt, final int iterations, final int keyLength ) {
+        try {
+            SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
+            PBEKeySpec spec = new PBEKeySpec(password, salt, iterations, keyLength);
+            SecretKey key = skf.generateSecret(spec);
+            byte[] res = key.getEncoded();
+            return res;
+  
+        } catch(NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        } catch(InvalidKeySpecException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static String promptForValidText(final Scanner kb, final String prompt, final String regex) {
@@ -117,4 +182,35 @@ public class App
         } while(!inputIsValid);
         return input;
     }
+
+    public static byte[] getSalt() {
+        Random random = new SecureRandom();
+        byte[] salt = new byte[16];
+        random.nextBytes(salt);
+        return salt;
+      }
+}
+
+private void outputInfoToFile(String firstname, String lastname, BigInteger val1, BigInteger val2, String readFileName, String writeFileName){
+    File writeFile = new File(writeFileName);
+    File readFile = new File(readFileName);
+    
+    PrintWriter writer = new PrintWriter(writeFile);
+    BufferedReader reader = new BufferedReader(new FileReader(readFile));
+    String line;
+    
+    BigInt addVals = val1 + val2;
+    BigInt multVals = val1 * val2;
+    
+    writer.println(firstname + " " + lastname);
+    writer.println(val1 + " + " + val2 + " = " + addVals);
+    writer.println(val1 + " * " + val2 + " = " + multVals);
+    
+    while((line = reader.readLine()) != null){
+        writer.println(line);
+    }
+    
+    writeFile.close();
+    readFile.close();  
+    
 }
