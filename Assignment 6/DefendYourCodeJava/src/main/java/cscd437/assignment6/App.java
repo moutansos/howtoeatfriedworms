@@ -1,6 +1,6 @@
 package cscd437.assignment6;
 
-//Contributors: Travis Currier,
+//Contributors: Travis Currier, Ben Brougher, Daylyn Hoxie
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
