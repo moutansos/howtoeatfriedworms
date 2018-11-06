@@ -1,6 +1,7 @@
 
 #define PCRE2_CODE_UNIT_WIDTH 8
 
+//Contributors: Travis Currier,
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
