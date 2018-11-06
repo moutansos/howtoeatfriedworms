@@ -72,6 +72,8 @@ public class App
             } else {
                 System.out.println("The password does not match!");
             }
+
+            outputInfoToFile(firstName, lastName, val1, val2, fileToReadFromName, fileToWriteTo);
         } catch(IOException ex) {
             System.out.println("Error with password storage.");
         }
@@ -80,9 +82,9 @@ public class App
 
     private static void storePassword(String password) throws IOException {
         byte[] salt = getSalt();
-        byte[] encodedSalt = Base64.encodeBase64(salt);
+        byte[] encodedSalt = Base64.getEncoder().encode(salt);
         byte[] hashedPassword = hashPassword(password.toCharArray(), salt, PASS_ITERATIONS, PASS_KEY_LENGTH);
-        byte[] encodedPassword = Base64.encodeBase64(hashedPassword);
+        byte[] encodedPassword = Base64.getEncoder().encode(hashedPassword);
         
         boolean append = false;
         BufferedWriter writer = new BufferedWriter(new FileWriter(PASS_STORAGE_FILE, append));
@@ -101,8 +103,8 @@ public class App
         String hashText = file.nextLine();
         reader.close();
 
-        byte[] saltFromFile = Base64.decodeBase64(saltText.getBytes());
-        byte[] hashFromFile = Base64.decodeBase64(hashText.getBytes());
+        byte[] saltFromFile = Base64.getDecoder().decode(saltText.getBytes());
+        byte[] hashFromFile = Base64.getDecoder().decode(hashText.getBytes());
 
         byte[] hashedPassword = hashPassword(password.toCharArray(), saltFromFile, PASS_ITERATIONS, PASS_KEY_LENGTH);
 
@@ -213,8 +215,11 @@ public class App
        
        while((line = reader.readLine()) != null){
            writer.println(line);
-       } 
-       
+       }
+
+       reader.close();
+       writer.close();
+
    }
 
 }
