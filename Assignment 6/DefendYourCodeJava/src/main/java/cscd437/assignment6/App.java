@@ -17,6 +17,7 @@ import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.regex.Pattern;
+import java.util.Base64;
 
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -79,14 +80,16 @@ public class App
 
     private static void storePassword(String password) throws IOException {
         byte[] salt = getSalt();
+        byte[] encodedSalt = Base64.encodeBase64(salt);
         byte[] hashedPassword = hashPassword(password.toCharArray(), salt, PASS_ITERATIONS, PASS_KEY_LENGTH);
+        byte[] encodedPassword = Base64.encodeBase64(hashedPassword);
         
         boolean append = false;
         BufferedWriter writer = new BufferedWriter(new FileWriter(PASS_STORAGE_FILE, append));
 
-        writer.append(new String(salt)); //TODO: Base64 encode
+        writer.append(new String(encodedSalt));
         writer.append('\n');
-        writer.append(new String(hashedPassword)); //TODO: Base64 encode
+        writer.append(new String(encodedPassword));
 
         writer.close();
     }
@@ -98,8 +101,8 @@ public class App
         String hashText = file.nextLine();
         reader.close();
 
-        byte[] saltFromFile = saltText.getBytes(); //TODO: Base64 decode
-        byte[] hashFromFile = hashText.getBytes(); //TODO: Base64 decode
+        byte[] saltFromFile = Base64.decodeBase64(saltText.getBytes());
+        byte[] hashFromFile = Base64.decodeBase64(hashText.getBytes());
 
         byte[] hashedPassword = hashPassword(password.toCharArray(), saltFromFile, PASS_ITERATIONS, PASS_KEY_LENGTH);
 
