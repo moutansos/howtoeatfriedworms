@@ -1,3 +1,8 @@
 Ben
 Brougher
-1234
+12
+12
+testinput.txt
+testoutput.txt
+test
+test

@@ -1,6 +1,0 @@
-Ben Brougher
-32 + 34 = 66
-32 * 34 = 1088
-Ben
-Brougher
-1234
