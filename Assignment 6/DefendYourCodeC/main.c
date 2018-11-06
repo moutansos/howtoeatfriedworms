@@ -49,8 +49,6 @@ int main() {
 
     long long int val2 = promptForValidInteger(VAL2_PROMPT);
 
-    printf("\n Value 1: %lldd Value 2: %lld \n", val1, val2); //TODO: Comment out when done with integer input
-
     char readFileName[51];
     promptForValidFileName(readFileName, sizeof(readFileName)/sizeof(readFileName[0]) - 1, READ_FILE_PROMPT, FILE_REGEX, READ_FILE_MUST_EXIST);
     
@@ -67,7 +65,7 @@ int main() {
     memset(secondEnteredPassword, 0, sizeof(secondEnteredPassword));
     promptForValidText(secondEnteredPassword, sizeof(secondEnteredPassword)/sizeof(secondEnteredPassword[0]) - 1, SECOND_PASSWORD_PROMPT, PASS_REGEX);
     
-    comparePasswords(secondEnteredPassword);
+    comparePasswords(secondEnteredPassword, sizeof(secondEnteredPassword)/sizeof(secondEnteredPassword[0]) - 1);
     
     outputInfoToFile(firstName, lastName, val1, val2, readFileName, writeFileName);
     
@@ -93,12 +91,10 @@ void storePassword(char * firstPassword) {
     fclose(storeInFile);
 }
 
-void comparePasswords(char * secondPassword) {
+void comparePasswords(char * secondPassword, size_t passwordBufferSize) {
     bool equal = false;
-
     while(equal == false){
-	    FILE * takeFromStorage = fopen("password_storage.txt", "r");
-
+        FILE * takeFromStorage = fopen("password_storage.txt", "r");
 	    char passwordSalt[51];
 	    fscanf(takeFromStorage, "%50[^\n]\n", passwordSalt);
 	    passwordSalt[50] = '\0';
@@ -114,15 +110,14 @@ void comparePasswords(char * secondPassword) {
 	    fscanf(takeFromStorage, "%64[^\n]\n", passwordFromFile);
 
 	    if(strcmp(hexResult, passwordFromFile) != 0) {
-		promptForValidText(secondPassword, sizeof(secondPassword)/sizeof(secondPassword[0]) - 1, SECOND_PASSWORD_PROMPT, PASS_REGEX);
-
-	    }
-	    else{
+            printf("Invalid password. Try again!");  
+		    promptForValidText(secondPassword, passwordBufferSize, SECOND_PASSWORD_PROMPT, PASS_REGEX);
+	    } else {
 	    	printf("The passwords match!\n");
 	    	equal = true;
 	    }
+        fclose(takeFromStorage);
     }
-    fclose(takeFromStorage);
 }
             
 void outputInfoToFile(char * firstName, char * lastName, const long long int val1, const long long int val2, char * readFileName, char * writeFileName){

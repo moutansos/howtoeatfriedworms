@@ -2,7 +2,7 @@ void promptForValidText(char buff[], const size_t bufferSize, const char promptT
 long promptForValidInteger(const char promptText[]);
 void promptForValidFileName(char buff[], const int bufferSize, const char promptFile[], const char regexFile[], const bool fileMustAlreadyExist);
 void storePassword(char * firstPassword);
-void comparePasswords(char * secondPassword);
+void comparePasswords(char * secondPassword, size_t passwordBufferSize);
 void outputInfoToFile(char * firstName, char * lastName, const long long int val1, const long long int val2, char * readFileName, char * writeFileName);
 void clearBuffer(char *input);
 long hash(char * password);
