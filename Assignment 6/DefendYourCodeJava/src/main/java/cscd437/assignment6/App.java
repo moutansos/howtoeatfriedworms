@@ -5,7 +5,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.io.IOException;
+import java.io.*;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -47,7 +49,7 @@ public class App
     private static final boolean READ_FILE_MUST_EXIST = true;
     private static final boolean WRITE_FILE_MUST_EXIST = false;
 
-    public static void main(final String[] args )
+    public static void main(final String[] args ) throws IOException
     {
         Scanner kb = new Scanner(System.in);
 
@@ -56,7 +58,7 @@ public class App
 
         BigInteger val1 = new BigInteger(promptForValidInt(kb, VAL1_PROMPT) + "");
         BigInteger val2 = new BigInteger(promptForValidInt(kb, VAL2_PROMPT) + "");
-
+        
         String fileToReadFromName = promptForValidFileName(kb, READ_FILE_PROMPT, FILE_REGEX, READ_FILE_MUST_EXIST);
         String fileToWriteTo = promptForValidFileName(kb, WRITE_FILE_PROMPT, FILE_REGEX, WRITE_FILE_MUST_EXIST);
 
@@ -189,28 +191,27 @@ public class App
         random.nextBytes(salt);
         return salt;
       }
-}
 
-private void outputInfoToFile(String firstname, String lastname, BigInteger val1, BigInteger val2, String readFileName, String writeFileName){
-    File writeFile = new File(writeFileName);
-    File readFile = new File(readFileName);
-    
-    PrintWriter writer = new PrintWriter(writeFile);
-    BufferedReader reader = new BufferedReader(new FileReader(readFile));
-    String line;
-    
-    BigInt addVals = val1 + val2;
-    BigInt multVals = val1 * val2;
-    
-    writer.println(firstname + " " + lastname);
-    writer.println(val1 + " + " + val2 + " = " + addVals);
-    writer.println(val1 + " * " + val2 + " = " + multVals);
-    
-    while((line = reader.readLine()) != null){
-        writer.println(line);
-    }
-    
-    writeFile.close();
-    readFile.close();  
-    
+   private static void outputInfoToFile(String firstname, String lastname, BigInteger val1, BigInteger val2, String readFileName, String writeFileName) throws IOException{
+       File writeFile = new File(writeFileName);
+       writeFile.createNewFile();
+       File readFile = new File(readFileName);
+       
+       PrintWriter writer = new PrintWriter(writeFile);
+       BufferedReader reader = new BufferedReader(new FileReader(readFile));
+       String line;
+       
+       BigInteger addVals = val1.add(val2);
+       BigInteger multVals = val1.multiply(val2);
+       
+       writer.println(firstname + " " + lastname);
+       writer.println(val1 + " + " + val2 + " = " + addVals);
+       writer.println(val1 + " * " + val2 + " = " + multVals);
+       
+       while((line = reader.readLine()) != null){
+           writer.println(line);
+       } 
+       
+   }
+
 }
