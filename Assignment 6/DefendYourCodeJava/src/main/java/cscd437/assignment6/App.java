@@ -182,15 +182,11 @@ public class App
         do {
             System.out.println(prompt);
             try {
-                if(kb.hasNextInt()) {
-                    input = kb.nextInt();
-                    inputIsValid = true;
-                } else
-                    throw new InputMismatchException();
+                String inputString = kb.nextLine();
+                input = Integer.parseInt(inputString);
+                inputIsValid = true;
             } catch(Exception ex) {
                 System.out.println("There was an error processing the input. Please try again.\n");
-            } finally {
-                kb.nextLine();
             }
         } while(!inputIsValid);
         return input;
