@@ -31,7 +31,7 @@ static const char SECOND_PASSWORD_PROMPT[] = "Please input the password again: "
 static const char NAME_REGEX[] = "^[A-Za-z]{1,50}$";
 static const char FILE_REGEX[] = "^[\\w\\- ]+\\.[Tt][Xx][Tt]$";
 static const char PASS_REGEX[] = "^[\\w\\d\\-_\\+=!@#$%%^&\\*\\(\\)]{1,255}$";
-static const char INTEGER_REGEX[] = "^\\d+$";
+static const char INTEGER_REGEX[] = "^\\-?\\d+$";
 
 static const bool READ_FILE_MUST_EXIST = true;
 static const bool WRITE_FILE_MUST_EXIST = false;
