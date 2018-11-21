@@ -1,6 +1,7 @@
 package cscd437.assignment6;
 
-//Contributors: Travis Currier,
+//Contributors: Travis Currier, Ben Brougher, Daylyn Hoxie
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -65,15 +66,19 @@ public class App
         String fileToWriteTo = promptForValidFileName(kb, WRITE_FILE_PROMPT, FILE_REGEX, WRITE_FILE_MUST_EXIST);
 
         try {
+            boolean match = false;
             String firstPassword = promptForValidText(kb, FIRST_PASSWORD_PROMPT, PASS_REGEX);
             storePassword(firstPassword);
             String secondPassword = promptForValidText(kb, SECOND_PASSWORD_PROMPT, PASS_REGEX);
-            if(storedPasswordMatches(secondPassword)) {
-                System.out.println("The password matches");
-            } else {
-                System.out.println("The password does not match!");
-            }
-
+            do {
+                if (storedPasswordMatches(secondPassword)) {
+                    System.out.println("The password matches");
+                    match = true;
+                } else {
+                    System.out.println("The password does not match! Try again");
+                    secondPassword = promptForValidText(kb, SECOND_PASSWORD_PROMPT, PASS_REGEX);
+                }
+            }while(!match);
             outputInfoToFile(firstName, lastName, val1, val2, fileToReadFromName, fileToWriteTo);
         } catch(IOException ex) {
             System.out.println("Error with password storage.");
@@ -180,7 +185,7 @@ public class App
                 if(kb.hasNextInt()) {
                     input = kb.nextInt();
                     inputIsValid = true;
-                } else 
+                } else
                     throw new InputMismatchException();
             } catch(Exception ex) {
                 System.out.println("There was an error processing the input. Please try again.\n");
@@ -224,3 +229,4 @@ public class App
    }
 
 }
+
